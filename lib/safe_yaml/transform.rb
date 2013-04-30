@@ -37,6 +37,8 @@ module SafeYAML
       when "tag:yaml.org,2002:float", "!float"
         success ,transformed_value = Transform::ToFloat.new.transform?(value)
         return transformed_value if success
+        success ,transformed_value = Transform::ToInteger.new.transform?(value)
+        return Float(transformed_value) if success
         value
       else
         self.to_guessed_type(value, quoted, options)

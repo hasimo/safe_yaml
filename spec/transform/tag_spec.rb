@@ -29,4 +29,15 @@ describe SafeYAML::Transform do
     decoded = SafeYAML::Transform.to_proper_type(value, true, "tag:yaml.org,2002:float")
     decoded.should == expect
   end
+  
+  it "should return Float when adding the float tag" do
+    value = "1"
+    expect = 1.0
+    decoded = SafeYAML::Transform.to_proper_type(value, true, "!float")
+
+    decoded.should == expect
+
+    decoded = SafeYAML::Transform.to_proper_type(value, true, "tag:yaml.org,2002:float")
+    decoded.should == expect
+  end
 end
