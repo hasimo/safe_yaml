@@ -19,7 +19,6 @@ module SafeYAML
           success, transformed_value = transformer.method(:transform?).arity == 1 ?
             transformer.transform?(value) :
             transformer.transform?(value, options)
-
           return transformed_value if success
         end
       end
@@ -33,6 +32,12 @@ module SafeYAML
         decoded = Base64.decode64(value)
         decoded = decoded.force_encoding(value.encoding) if decoded.respond_to?(:force_encoding)
         decoded
+      when '!str', 'tag:yaml.org,2002:str'
+        value
+      when "tag:yaml.org,2002:float", "!float"
+        success ,transformed_value = Transform::ToFloat.new.transform?(value)
+        return transformed_value if success
+        value
       else
         self.to_guessed_type(value, quoted, options)
       end
